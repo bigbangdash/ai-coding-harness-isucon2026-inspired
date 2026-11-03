@@ -5,8 +5,8 @@
 LINT_CMD=""
 TYPE_CMD=""
 SECURITY_CMD=""
-TEST_CMD=""         # 必須（unit / integration）
-ACCEPTANCE_CMD=""   # 必須（tests/acceptance/）
+TEST_CMD="python3 -m unittest discover -s tests/unit -t ."         # 必須（unit / integration）
+ACCEPTANCE_CMD="python3 -m unittest discover -s tests/acceptance -t ."   # 必須（tests/acceptance/）
 
 MAX_FAILS_CRITIC=3  # FAIL がこの回数続いたら critic で前提を見直す
 MAX_FAILS_BLOCK=5   # FAIL がこの回数続いたら BLOCKED にして人間に返す
