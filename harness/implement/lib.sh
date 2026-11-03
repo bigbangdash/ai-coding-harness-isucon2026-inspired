@@ -14,12 +14,40 @@ protected_hashes() {
   protected_files | while read -r f; do shasum -a 256 "$f"; done
 }
 
+# 保護対象の区分。spec = 人間が合意する仕様と受け入れテスト、harness = 評価の仕組み。
+protected_category() {
+  case $1 in specs/*|tests/acceptance/*) echo spec ;; *) echo harness ;; esac
+}
+
+# 承認時からの差分を「<区分> <added|modified|removed> <パス>」で出す。
+approval_diff() {
+  awk 'NR==FNR { if ($0 !~ /^#/ && NF) o[$NF] = $1; next }
+       { n[$NF] = $1 }
+       END {
+         for (p in n) if (!(p in o)) print "added", p; else if (o[p] != n[p]) print "modified", p
+         for (p in o) if (!(p in n)) print "removed", p
+       }' <(cat "$H/approved.sha256" 2>/dev/null) <(protected_hashes) |
+    while read -r kind f; do echo "$(protected_category "$f") $kind $f"; done | sort -k3
+}
+
 # 承認時から変わった保護対象ファイルのパス。
 unapproved_changes() {
-  comm -3 \
-    <(grep -v '^#' "$H/approved.sha256" 2>/dev/null | sort) \
-    <(protected_hashes | sort) |
-    awk '{print $NF}' | sort -u
+  approval_diff | awk '{print $3}'
+}
+
+# 作業中の機能の requirements.md。変更された specs/<機能>/ と、ブランチ名 impl/<番号>-<機能> から決める。
+feature_requirements() { # base
+  local slug
+  slug=$(git rev-parse --abbrev-ref HEAD | sed -n 's#^impl/\([0-9]*-\)\{0,1\}##p')
+  { git diff --name-only "$1" -- specs/; git ls-files --others --exclude-standard -- specs/
+    [ -n "$slug" ] && echo "specs/$slug/"; } |
+    awk -F/ 'NF >= 2 && $2 != "" { print "specs/" $2 "/requirements.md" }' | sort -u |
+    while read -r f; do [ -f "$f" ] && echo "$f"; done
+}
+
+# requirements.md の未確定事項の表で、状態が「未回答」の行の ID。
+unanswered_questions() { # requirements.md
+  awk -F'|' '$2 ~ /^[[:space:]]*Q-[0-9]+[[:space:]]*$/ && $4 ~ /未回答/ { gsub(/[[:space:]]/, "", $2); print $2 }' "$1"
 }
 
 # 比較の基準。main との分岐点（main 上なら HEAD）。

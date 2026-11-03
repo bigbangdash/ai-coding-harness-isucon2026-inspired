@@ -37,6 +37,16 @@
           }
         ]
       }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/harness/implement/hooks/record_review.py"
+          }
+        ]
+      }
     ]
   }
 }

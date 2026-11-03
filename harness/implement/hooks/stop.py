@@ -5,19 +5,22 @@
   1. 変更後に evaluate.sh を実行していない（最後の評価の指紋が今の作業ツリーと違う）
   2. 最後の評価が FAIL
   3. PASS だが risk: high で、今の作業ツリーに対する evaluator の PASS がない
-  4. evaluator の結果が FAIL
+     （記録がない、FAIL、status が読めない、のいずれも止める）
 
-BLOCKED（人間の判断が必要）は止めない。そのまま人間に返す。
+BLOCKED（人間の判断が必要）は止めない。evaluator が BLOCKED を返した場合も同じ。
+evaluator をバックグラウンドで起動して結果待ちの間（RUNNING、RUNNING_TTL 秒以内）は止めない。
 同じ理由で続けて MAX_BLOCKS 回止めたら、無限ループを避けるため終了を許し、警告だけ出す。
 """
 from __future__ import annotations
 
 import json
 import sys
+import time
 
 import common
 
 MAX_BLOCKS = 3
+RUNNING_TTL = 30 * 60
 
 
 def reason() -> str | None:
@@ -36,10 +39,26 @@ def reason() -> str | None:
         mine = [r for r in common.reviews() if r["fingerprint"] == fp and r["agent"].endswith("evaluator")]
         if not mine:
             return "高リスクの変更（risk: high）。evaluator サブエージェントで設計評価を受ける（依頼文には機能名と scope だけ書く）。"
-        last = mine[-1]["status"]
+        last = mine[-1].get("status")
+        if last in ("PASS", "BLOCKED"):
+            return None
+        if last == "RUNNING":
+            if time.time() - started(mine[-1]) < RUNNING_TTL:
+                return None
+            return (f"evaluator の結果が {RUNNING_TTL // 60} 分たっても記録されていない（RUNNING のまま）。"
+                    "SubagentStop Hook が動いているか確認し、evaluator をやり直す。")
         if last == "FAIL":
             return "evaluator が FAIL を返した。指摘を修正し、evaluate.sh と evaluator をやり直す。"
+        return (f"evaluator の結果が PASS として記録されていない（status: {last}）。"
+                "`.harness/reviews/` を確認し、必要なら evaluator をやり直す。")
     return None
+
+
+def started(rec: dict) -> float:
+    try:
+        return time.mktime(time.strptime(rec["ts"], "%Y%m%d-%H%M%S"))
+    except (KeyError, ValueError):
+        return 0.0
 
 
 def main() -> None:
