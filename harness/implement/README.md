@@ -22,6 +22,7 @@ app/ を実装 → evaluate.sh
 | `protected-paths.txt` | 承認なしに変えてはいけないパス |
 | `risk-paths.txt` | 変更されたら evaluator の評価が必要になるパス |
 | `approve.sh` | 人間が保護対象の変更を承認する（`approved.sha256` を更新）。`--only spec\|harness` で区分ごとに承認 |
+| `selftest.sh` | ハーネス自身のテスト。`evaluate.sh`・`approve.sh`・Hook の判定を使い捨てのリポジトリで確かめる（`-v` で失敗時の出力も表示） |
 
 - 作業ブランチ: `impl/<番号>-<名前>`
 - 詳しいルール: リポジトリ直下の `EVALUATION.md`

@@ -17,6 +17,7 @@
 | [`harness/implement/evaluate.sh`](harness/implement/evaluate.sh) | Level 1 評価（PASS / FAIL / BLOCKED） |
 | [`harness/implement/approve.sh`](harness/implement/approve.sh) | 人間が保護対象を承認する |
 | [`harness/implement/commands.sh`](harness/implement/commands.sh) | テストコマンドとしきい値 |
+| [`harness/implement/selftest.sh`](harness/implement/selftest.sh) | ハーネス自身のテスト |
 | [`harness/implement/evals/`](harness/implement/evals/) | 評価基準（[設計](harness/implement/evals/design.md)・[実装](harness/implement/evals/implementation.md)・[業務受入](harness/implement/evals/acceptance.md)・[AI 行動](harness/implement/evals/behavior.md)） |
 | [`.claude/settings.json`](.claude/settings.json) | 権限（deny / ask）と Hook の配線 |
 | [`.claude/agents/evaluator.md`](.claude/agents/evaluator.md) / [`critic.md`](.claude/agents/critic.md) | implement のサブエージェント |
@@ -54,7 +55,8 @@ app/ を実装 → evaluate.sh
 | critic | FAIL が続いたときに前提と方針を疑う。コードは変えない | [`.claude/agents/critic.md`](.claude/agents/critic.md) |
 | テンプレート | 要件（未確定事項は状態・回答・回答者を記録）と受入条件 | [`requirements.md`](harness/implement/templates/requirements.md) / [`acceptance.md`](harness/implement/templates/acceptance.md) |
 | 権限 | 評価の仕組みと `.harness/` の編集を deny、`approve.sh` と `git push` を ask | [`.claude/settings.json`](.claude/settings.json) |
-| CI | PR と main への push で `evaluate.sh` を再実行（ローカルの `.harness/` は信用しない） | [`.github/workflows/evaluate.yml`](.github/workflows/evaluate.yml) |
+| ハーネス自身のテスト | `evaluate.sh`・`approve.sh`・Stop Hook・評価の記録 Hook の判定を、使い捨てのリポジトリで確かめる（80 件）。対象アプリに依存しない | [`selftest.sh`](harness/implement/selftest.sh) |
+| CI | PR と main への push で `selftest.sh` と `evaluate.sh` を実行（ローカルの `.harness/` は信用しない） | [`.github/workflows/evaluate.yml`](.github/workflows/evaluate.yml) |
 
 ### 使い方
 
@@ -71,8 +73,9 @@ bash harness/implement/evaluate.sh             # 評価（AI が変更のたび�
 評価を受ける側が基準を変えた形になり、evaluator に BLOCKED で指摘される。
 
 1. `main` から `harness/<名前>` ブランチを切って直す
-2. そのブランチで人間が `approve.sh --only harness` で承認してコミット
-3. `main` に入れてから、実装ブランチに `main` を取り込む
+2. `bash harness/implement/selftest.sh` が通ることを確かめる（判定を変えたらテストも足す）
+3. そのブランチで人間が `approve.sh --only harness` で承認してコミット
+4. `main` に入れてから、実装ブランチに `main` を取り込む
 
 ## tune — ISUCON 型の自律性能改善
 
@@ -133,7 +136,7 @@ python3 harness/tune/runner/main.py --resume   # 中断から再開
 | implement: evaluator | ✅ design / final を実行済み |
 | implement: critic | 定義のみ（FAIL 連続が起きておらず未起動） |
 | implement: lint / type / security | 未設定 |
-| implement: ハーネス自身のテスト | なし（次の改善候補） |
+| implement: ハーネス自身のテスト | ✅ `selftest.sh`（80 件。過去のバグを戻すと失敗することを確認） |
 | tune: Runner・Evaluator・Hooks・final_run・experiments | ✅（偽の課題で Claude なしの動作確認） |
 | tune: Claude Code を起動した通し実行 | 未検証 |
 | tune: 実際の過去問の課題 | 未着手 |

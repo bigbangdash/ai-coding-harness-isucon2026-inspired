@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: selftest.sh（ハーネス自身のテスト）
+        run: harness/implement/selftest.sh -v
       - name: evaluate.sh
         run: harness/implement/evaluate.sh
       - name: 評価ログを保存
