@@ -2,11 +2,11 @@
 
 H=harness/implement
 
-# 保護対象ファイルを1行1パスで出す（approved.sha256 自身は除く）。
+# 保護対象ファイルを1行1パスで出す（.gitignore 対象と approved.sha256 自身は除く）。
 protected_files() {
   grep -v -e '^#' -e '^[[:space:]]*$' "$H/protected-paths.txt" | while read -r p; do
-    [ -e "$p" ] && find "$p" -type f
-  done | grep -vx "$H/approved.sha256" | sort -u
+    git ls-files --cached --others --exclude-standard -- "$p"
+  done | while read -r f; do [ -f "$f" ] && echo "$f"; done | grep -vx "$H/approved.sha256" | sort -u
 }
 
 # 保護対象ファイルの現在のハッシュ一覧。

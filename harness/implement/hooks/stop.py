@@ -8,7 +8,7 @@
   4. evaluator の結果が FAIL
 
 BLOCKED（人間の判断が必要）は止めない。そのまま人間に返す。
-同じブランチで続けて MAX_BLOCKS 回止めたら、無限ループを避けるため終了を許し、警告だけ出す。
+同じ理由で続けて MAX_BLOCKS 回止めたら、無限ループを避けるため終了を許し、警告だけ出す。
 """
 from __future__ import annotations
 
@@ -49,18 +49,23 @@ def main() -> None:
     state = common.HARNESS / "state"
     state.mkdir(parents=True, exist_ok=True)
     counter = state / f"stop-blocks-{common.branch().replace('/', '_')}"
-    n = int(counter.read_text()) if counter.exists() else 0
+    try:
+        prev = json.loads(counter.read_text())
+    except (FileNotFoundError, ValueError):
+        prev = {}
+    prev = prev if isinstance(prev, dict) else {}
 
     r = reason()
     if r is None:
-        counter.write_text("0")
+        counter.unlink(missing_ok=True)
         return
+    n = prev.get("n", 0) if prev.get("reason") == r else 0  # 理由が変わった = 前進したので数え直す
     if n >= MAX_BLOCKS:
-        counter.write_text("0")
-        print(json.dumps({"systemMessage": f"Stop Hook: {MAX_BLOCKS} 回止めても評価が通らないまま終了します。理由: {r}"},
+        counter.unlink(missing_ok=True)
+        print(json.dumps({"systemMessage": f"Stop Hook: 同じ理由で {MAX_BLOCKS} 回止めても解消しないまま終了します。理由: {r}"},
                          ensure_ascii=False))
         return
-    counter.write_text(str(n + 1))
+    counter.write_text(json.dumps({"reason": r, "n": n + 1}, ensure_ascii=False))
     print(json.dumps({"decision": "block", "reason": r}, ensure_ascii=False))
 
 
