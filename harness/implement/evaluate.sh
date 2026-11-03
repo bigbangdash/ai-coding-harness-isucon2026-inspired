@@ -56,10 +56,24 @@ run_check A-1 acceptance "$ACCEPTANCE_CMD" yes
 if [ ! -f "$H/approved.sha256" ]; then
   add B-1 protected BLOCKED "承認済みハッシュがない" "$H/approve.sh を人間が実行する"
 else
-  for f in $(unapproved_changes); do
-    add B-1 protected BLOCKED "保護対象ファイルが未承認のまま変更されている" "$f"
+  # 区分（仕様 / 評価の仕組み）ごとに 1 件にまとめる。evidence に追加・変更・削除の内訳を入れる
+  diff=$(approval_diff)
+  for c in spec harness; do
+    rows=$(printf '%s\n' "$diff" | awk -v c="$c" '$1 == c')
+    [ -z "$rows" ] && continue
+    case $c in spec) what="仕様・受け入れテスト" ;; harness) what="評価の仕組み" ;; esac
+    ev=$(printf '%s\n' "$rows" | awk '
+      { k = ($2 == "added" ? "追加" : $2 == "modified" ? "変更" : "削除"); s[k] = s[k] (s[k] ? ", " : "") $3; n++ }
+      END { for (k in s) out = out (out ? " / " : "") k ": " s[k]; print out }')
+    add B-1 protected BLOCKED "$what が未承認のまま変わっている（$(printf '%s\n' "$rows" | wc -l | tr -d ' ') 件。approve.sh --only $c で区分ごとに承認できる）" "$ev"
   done
 fi
+
+# ---- 業務受入（A-3）: 作業中の機能の spec に未回答の質問が残っていないか ----
+for f in $(feature_requirements "$base"); do
+  qs=$(unanswered_questions "$f" | paste -sd, -)
+  [ -n "$qs" ] && add A-3 open-question BLOCKED "未回答の業務仕様が残っている（$qs）。人間に確認する" "$f"
+done
 
 test_diff=$(git diff "$base" -- tests/)
 skip_re='(\.skip\(|@skip|mark\.skip|xfail|\bxit\(|\bxdescribe\(|\.only\(|t\.Skip\()'
@@ -92,7 +106,7 @@ fi
 
 case $status in
   PASS)
-    if [ "$risk" = high ]; then next="evaluator で設計評価（design）を受け、人間の承認を得る"
+    if [ "$risk" = high ]; then next="evaluator で評価（実装前は design、完了前は final）を受け、人間の承認を得る"
     else next="完了。必要な承認ゲートへ進む"; fi ;;
   FAIL)
     if [ "$fails" -ge "$MAX_FAILS_CRITIC" ]; then next="修正の前に critic で前提を見直す"

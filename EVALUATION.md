@@ -44,6 +44,8 @@ Level 1 が PASS でないとき、Level 2 の判定で PASS に上書きしな�
 
 `harness/implement/protected-paths.txt` のファイル（評価基準・評価スクリプト・仕様・受け入れテスト）は、
 人間が `approve.sh` で承認した内容（`approved.sha256`）と食い違うと BLOCKED になる。
+B-1 は「仕様・受け入れテスト」と「評価の仕組み」の区分ごとにまとめて出し、追加・変更・削除を分けて示す。
+`approve.sh --only spec|harness` で区分ごとに承認できる（実装の作業中に評価の仕組みの変更を一緒に承認しないため）。
 
 - 予防: `.claude/settings.json` の deny で評価の仕組みの編集を禁止し、`approve.sh` は ask で人間の確認を必須にする
 - 検出: どんな手段で変えても、`evaluate.sh` がハッシュの不一致で BLOCKED にする
@@ -54,4 +56,6 @@ Level 1 が PASS でないとき、Level 2 の判定で PASS に上書きしな�
 - B-2 / B-4 は正規表現による検出なので、見逃しや誤検出がある
 - evaluator に渡す依頼文から推論を除くのは運用ルールで、仕組みでは強制していない
 - Stop Hook は同じ理由で 3 回続けて止めたら、無限ループを避けるため終了を許す（警告は出る）
+- evaluator / critic の結果は SubagentStop Hook で記録する。バックグラウンドで起動した直後は RUNNING として記録され、Stop Hook は 30 分間それを待ちとみなして終了を許す。SubagentStop が来なければ、30 分後から再び止める
+- A-3 の未回答検出は、作業中の機能（変更された `specs/<機能>/` とブランチ名 `impl/<番号>-<機能>`）の requirements.md の表だけを見る
 - `.harness/`（評価結果・evaluator の記録）は Edit を禁止しているが、シェルからは書き換えられる。CI で evaluate.sh を再実行して担保する

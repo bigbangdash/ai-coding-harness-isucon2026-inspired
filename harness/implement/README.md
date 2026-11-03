@@ -18,10 +18,10 @@ app/ を実装 → evaluate.sh
 | `evals/` | 評価基準（設計・実装・業務受入・AI 行動） |
 | `templates/` | 要件・受入条件のテンプレート |
 | `hooks/stop.py` | 評価を通さずに作業を終えるのを止める（`impl/*` ブランチだけ） |
-| `hooks/record_review.py` | evaluator / critic の出力を `.harness/reviews/` に原文で保存 |
+| `hooks/record_review.py` | evaluator / critic の出力を `.harness/reviews/` に原文で保存（SubagentStop で最終回答、バックグラウンド起動時は PostToolUse で RUNNING） |
 | `protected-paths.txt` | 承認なしに変えてはいけないパス |
 | `risk-paths.txt` | 変更されたら evaluator の評価が必要になるパス |
-| `approve.sh` | 人間が保護対象の変更を承認する（`approved.sha256` を更新） |
+| `approve.sh` | 人間が保護対象の変更を承認する（`approved.sha256` を更新）。`--only spec\|harness` で区分ごとに承認 |
 
 - 作業ブランチ: `impl/<番号>-<名前>`
 - 詳しいルール: リポジトリ直下の `EVALUATION.md`
