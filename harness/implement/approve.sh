@@ -31,7 +31,7 @@ for c in spec harness; do
   printf '%s\n' "$rows" | while read -r _ k f; do echo "    $(kind "$k")  $f"; done
 done
 rest=$(printf '%s\n' "$diff" | awk -v c="$only" 'NF && c != "" && $1 != c' | wc -l | tr -d ' ')
-[ "$rest" -gt 0 ] && echo "（--only $only のため、ほかの区分の $rest 件は承認しません）"
+if [ "$rest" -gt 0 ]; then echo "（--only $only のため、ほかの区分の $rest 件は承認しません）"; fi
 
 new=$(mktemp); trap 'rm -f "$new"' EXIT
 {
@@ -39,12 +39,15 @@ new=$(mktemp); trap 'rm -f "$new"' EXIT
   echo "# approved-at: $(date '+%Y-%m-%d %H:%M:%S')"
   [ -n "$only" ] && echo "# approved-only: $only"
   # 承認する区分は今のハッシュ、それ以外は承認済みのハッシュを残す
+  # （set -e の下なので、ループ本体を && でつながない。最後の行が偽だとループが失敗扱いになり、後続が走らない）
   { protected_hashes | while read -r h f; do
-      [ -z "$only" ] || [ "$(protected_category "$f")" = "$only" ] && echo "$h  $f"
+      if [ -z "$only" ] || [ "$(protected_category "$f")" = "$only" ]; then echo "$h  $f"; fi
     done
-    [ -n "$only" ] && grep -v '^#' "$H/approved.sha256" 2>/dev/null | while read -r h f; do
-      [ -n "$f" ] && [ "$(protected_category "$f")" != "$only" ] && echo "$h  $f"
-    done
+    if [ -n "$only" ]; then
+      grep -v '^#' "$H/approved.sha256" 2>/dev/null | while read -r h f; do
+        if [ -n "$f" ] && [ "$(protected_category "$f")" != "$only" ]; then echo "$h  $f"; fi
+      done
+    fi
   } | sort -k2
 } > "$new"
 mv "$new" "$H/approved.sha256"; trap - EXIT
