@@ -1,12 +1,13 @@
 # approved-by: miyamoto
-# approved-at: 2026-11-03 22:22:51
+# approved-at: 2026-11-03 22:39:48
 # approved-only: harness
 aff69eeabe6d8d36c170485f2b1ce8b63aec65d0bd32ffe2a183ccefdede4f37  .claude/agents/critic.md
 1e7c322eb4e4b359f902478f52f83c9af54c1234eb3b22ac2efc82909667c248  .claude/agents/evaluator.md
 d8e168cfe8a7afbfb0b50d279977263a95456c44bfaaffc7e02c979a56077206  .claude/settings.json
-adbb58b367d46de5364157dd47eb1c2bc9597e5613a18a6f194aee0d87a4b8cb  .github/workflows/evaluate.yml
+8ccb70704e7f0df4eb3504804b9b982a8d25f4f3027b1a2e601b200c325cd6bf  .github/workflows/evaluate.yml
+ecfa4be6d26c4b9f114424c7fe88e16fa52fed617b7c178f1dfa3f7480235de9  .github/workflows/selftest.yml
 01cda35f29805d155faf10b6f2dc2013da1c3021fbae9dcb789f24c1c139da7f  CLAUDE.md
-e6ea48d330b2ad1a38f524b22e8ad8dda5dcf45f3f93be2a99e96c4b458f1815  EVALUATION.md
+feff7874342c5c6bdb79a6c741a4adf100c2ff3fa39145377a92e857ae0cf5e9  EVALUATION.md
 ea4bc7c681c42e1980d9a6329041d2c6b1f6397eeb1ea777f5cf6ca9534d6a5e  harness/implement/approve.sh
 d34a82b8a48287cf1e6ca26027f8046e98e0b5213bce9372bdcff280edc65645  harness/implement/commands.sh
 94196e044b1261448d7a87fca52824994d157cb78f374d13e70319b3bea3e3d8  harness/implement/evals/acceptance.md

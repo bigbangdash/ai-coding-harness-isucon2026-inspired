@@ -59,3 +59,4 @@ B-1 は「仕様・受け入れテスト」と「評価の仕組み」の区分�
 - evaluator / critic の結果は SubagentStop Hook で記録する。バックグラウンドで起動した直後は RUNNING として記録され、Stop Hook は 30 分間それを待ちとみなして終了を許す。SubagentStop が来なければ、30 分後から再び止める
 - A-3 の未回答検出は、作業中の機能（変更された `specs/<機能>/` とブランチ名 `impl/<番号>-<機能>`）の requirements.md の表だけを見る
 - `.harness/`（評価結果・evaluator の記録）は Edit を禁止しているが、シェルからは書き換えられる。CI で evaluate.sh を再実行して担保する
+- CI は PR でだけ実行する。`main` への直接 push では evaluate.sh も selftest.sh も CI で実行されないので、上の 2 つの担保は PR を経由したときだけ効く

@@ -1,11 +1,10 @@
 # implement の Level 1 評価を CI で再実行する。ローカルの .harness/ の記録は信用しない。
+# PR でだけ実行する。main への直接 push では実行しない（ローカルの evaluate.sh で確かめてから push する）。
 # BLOCKED（未承認の保護対象の変更など）も失敗扱い。
 name: evaluate
 
 on:
   pull_request:
-  push:
-    branches: [main]
 
 jobs:
   evaluate:
@@ -19,8 +18,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: selftest.sh（ハーネス自身のテスト）
-        run: harness/implement/selftest.sh -v
       - name: evaluate.sh
         run: harness/implement/evaluate.sh
       - name: 評価ログを保存

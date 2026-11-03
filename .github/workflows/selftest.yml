@@ -1,0 +1,20 @@
+# ハーネス自身のテスト（selftest.sh）。評価の仕組みを変えた PR でだけ実行する。
+# main への直接 push では実行しない。ハーネスを変えたら、push の前にローカルで selftest.sh を実行する。
+name: selftest
+
+on:
+  pull_request:
+    paths:
+      - harness/implement/**
+      - .github/workflows/selftest.yml
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: selftest.sh
+        run: harness/implement/selftest.sh -v

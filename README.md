@@ -56,7 +56,7 @@ app/ を実装 → evaluate.sh
 | テンプレート | 要件（未確定事項は状態・回答・回答者を記録）と受入条件 | [`requirements.md`](harness/implement/templates/requirements.md) / [`acceptance.md`](harness/implement/templates/acceptance.md) |
 | 権限 | 評価の仕組みと `.harness/` の編集を deny、`approve.sh` と `git push` を ask | [`.claude/settings.json`](.claude/settings.json) |
 | ハーネス自身のテスト | `evaluate.sh`・`approve.sh`・Stop Hook・評価の記録 Hook の判定を、使い捨てのリポジトリで確かめる（80 件）。対象アプリに依存しない | [`selftest.sh`](harness/implement/selftest.sh) |
-| CI | PR と main への push で `selftest.sh` と `evaluate.sh` を実行（ローカルの `.harness/` は信用しない） | [`.github/workflows/evaluate.yml`](.github/workflows/evaluate.yml) |
+| CI | PR でだけ実行する。`evaluate.sh` は毎回、`selftest.sh` は `harness/implement/` が変わったときだけ。`main` への直接 push では実行しない | [`evaluate.yml`](.github/workflows/evaluate.yml) / [`selftest.yml`](.github/workflows/selftest.yml) |
 
 ### 使い方
 
@@ -73,7 +73,7 @@ bash harness/implement/evaluate.sh             # 評価（AI が変更のたび�
 評価を受ける側が基準を変えた形になり、evaluator に BLOCKED で指摘される。
 
 1. `main` から `harness/<名前>` ブランチを切って直す
-2. `bash harness/implement/selftest.sh` が通ることを確かめる（判定を変えたらテストも足す）
+2. `bash harness/implement/selftest.sh` が通ることを確かめる（判定を変えたらテストも足す。`main` に直接 push すると CI では実行されない）
 3. そのブランチで人間が `approve.sh --only harness` で承認してコミット
 4. `main` に入れてから、実装ブランチに `main` を取り込む
 
@@ -140,5 +140,5 @@ python3 harness/tune/runner/main.py --resume   # 中断から再開
 | tune: Runner・Evaluator・Hooks・final_run・experiments | ✅（偽の課題で Claude なしの動作確認） |
 | tune: Claude Code を起動した通し実行 | 未検証 |
 | tune: 実際の過去問の課題 | 未着手 |
-| CI（evaluate.sh の再実行） | ✅ PR #1 と `main` へのマージ後で PASS |
+| CI（evaluate.sh・selftest.sh の再実行） | ✅ PR #1 で PASS。`main` への直接 push では実行しない（ブランチ保護もないので、CI は通知だけでマージは止めない） |
 | ブランチ保護 | 未設定 |
