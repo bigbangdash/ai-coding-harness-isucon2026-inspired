@@ -98,11 +98,9 @@ python3 harness/tune/runner/main.py --resume   # 中断から再開
 
 ## 実装済みのアプリ機能
 
-| 機能 | ブランチ | 仕様 | 実装 | テスト |
+| 機能 | 入った PR | 仕様 | 実装 | テスト |
 |---|---|---|---|---|
-| 請求書の消費税計算（税率ごとに 1 回だけ切り捨て） | `impl/001-invoice-tax` | [要件](specs/invoice-tax/requirements.md) / [受入条件](specs/invoice-tax/acceptance.md) | [`app/invoice/tax.py`](app/invoice/tax.py) | [`tests/acceptance/test_invoice_tax.py`](tests/acceptance/test_invoice_tax.py) |
-
-`main` にはまだ入っていない（リンクは `impl/001-invoice-tax` ブランチで有効）。
+| 請求書の消費税計算（税率ごとに 1 回だけ切り捨て） | [#1](https://github.com/bigbangdash/ai-coding-harness-isucon2026-inspired/pull/1) | [要件](specs/invoice-tax/requirements.md) / [受入条件](specs/invoice-tax/acceptance.md) | [`app/invoice/tax.py`](app/invoice/tax.py) | [`tests/acceptance/test_invoice_tax.py`](tests/acceptance/test_invoice_tax.py) |
 
 ## フォルダー
 
@@ -129,7 +127,7 @@ python3 harness/tune/runner/main.py --resume   # 中断から再開
 
 | 項目 | 状態 |
 |---|---|
-| implement: 評価ルール・`evaluate.sh`・保護と承認 | ✅ 実セッションで確認（`impl/001-invoice-tax`） |
+| implement: 評価ルール・`evaluate.sh`・保護と承認 | ✅ 実セッションで確認（PR #1 の `impl/001-invoice-tax`） |
 | implement: 区分ごとの承認・A-3 の未回答検出 | ✅ 実セッションで確認 |
 | implement: Stop Hook / evaluator 記録 Hook | ✅ 実セッションで確認（SubagentStop で PASS を記録し、Stop Hook が終了を許可） |
 | implement: evaluator | ✅ design / final を実行済み |
@@ -139,5 +137,5 @@ python3 harness/tune/runner/main.py --resume   # 中断から再開
 | tune: Runner・Evaluator・Hooks・final_run・experiments | ✅（偽の課題で Claude なしの動作確認） |
 | tune: Claude Code を起動した通し実行 | 未検証 |
 | tune: 実際の過去問の課題 | 未着手 |
-| CI（evaluate.sh の再実行） | 定義済み（未 push のため未実行） |
+| CI（evaluate.sh の再実行） | ✅ PR #1 と `main` へのマージ後で PASS |
 | ブランチ保護 | 未設定 |
