@@ -1,0 +1,59 @@
+# 競技ポリシー。大会ごとの値は CONDITIONS.md と合わせてここを書き換える。
+# 認証情報は書かない（環境変数で渡し、コマンドの中で参照する）。
+# experiments/tasks/*.toml と experiments/variants/*.toml はこのファイルを上書きする。
+
+[competition]
+duration_minutes = 480
+finalization_minutes = 40   # 終了の何分前から終盤（新規改善をやめて最終検証）にするか
+
+[app]
+workdir = "app"             # 改善対象（git 管理）。相対パスはリポジトリ直下から
+
+[commands]                  # どれもシェルで実行する。空 = 未設定
+benchmark = ""              # 必須。ベンチマーカーの実行
+deploy = ""                 # 変更を競技サーバーへ反映
+regression = ""             # 任意。ベンチ前の簡易な正常性確認
+profile = ""                # 任意。alp / pt-query-digest など
+reboot_check = ""           # 終盤。全サーバー再起動後の動作確認
+persist_check = ""          # 終盤。再起動後の永続データ確認
+
+[benchmark]
+score_regex = '"score":\s*(\d+)'   # 出力からスコアを取り出す（1 つ目のグループ）
+pass_regex = '"pass":\s*true'       # 正常性検証に合格したと判断する出力（空なら exit code だけで判断）
+timeout_seconds = 300
+deploy_before = true                # ベンチ前に必ず deploy する
+
+[evaluation]
+noise_pct = 3.0                     # 最良からの改善がこの % 以下なら再測定（RETEST）を求める
+preserve_best_valid_revision = true
+retain_all_benchmark_results = true
+
+[stagnation]
+threshold_minutes = 30              # 最良スコアがこの時間更新されなければ停滞
+action = "request_critic"
+
+[runner]
+restart_on_failure = true
+max_restarts = 3
+model = "claude-opus-5-5"
+max_budget_usd = 0                  # 0 = 上限なし
+monitor_interval_seconds = 10
+
+[final_run]
+use_score_distribution = true
+stop_quantile = 0.75                # 最終走行がこの分位点以上なら止める
+min_samples = 2                     # 分位点を計算するのに必要な、同じコミットの有効スコア数
+safety_margin_minutes = 3           # 残り時間がベンチ所要時間 + これ未満なら止める
+
+[features]                          # ハーネス評価（experiments）で on/off を比較する
+stop_hook = true                    # A: Stop Hook で早期終了を防ぐ
+critic = true                       # B: 停滞時に Critic を促す
+decision_log = true                 # D: 判断履歴を記録・復元する
+final_run_tool = true               # E: 最終走行の停止判断ツール
+state_restore = true                # F: Compaction / 再開時に外部状態を注入する
+
+[guard]                             # guard.py が拒否する Bash コマンド（正規表現）
+deny_patterns = [
+  'git\s+push\b.*--force',
+  'rm\s+-rf\s+/(\s|$)',
+]

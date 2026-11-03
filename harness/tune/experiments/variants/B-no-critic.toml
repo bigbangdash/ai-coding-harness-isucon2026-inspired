@@ -1,0 +1,3 @@
+# B: Critic なし（停滞の通知をしない）
+[features]
+critic = false

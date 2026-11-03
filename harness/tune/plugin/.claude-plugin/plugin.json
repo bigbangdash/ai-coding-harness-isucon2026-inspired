@@ -1,0 +1,5 @@
+{
+  "name": "isucon-tune",
+  "version": "0.1.0",
+  "description": "ISUCON 型の自律性能改善ハーネス（Stop / 停滞 / Compaction / Guard の Hook、Critic、isucon スキル）。Runner から --plugin-dir で読み込む。"
+}

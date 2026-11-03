@@ -1,6 +1,6 @@
 ---
 name: critic
-description: 修正や最適化が行き詰まったときに、前提や方針を疑って見直す。evaluate.sh の FAIL が続いたとき、または tune の不採用が続いたときに使う。コードは変更しない。
+description: 実装の修正が行き詰まったときに、前提や方針を疑って見直す。evaluate.sh の FAIL が続いたときに使う。コードは変更しない。
 tools: Read, Grep, Glob
 ---
 
@@ -11,21 +11,20 @@ tools: Read, Grep, Glob
 ## 読むもの
 
 - `.harness/logs/last-eval.yaml`（直近の評価結果）
-- implement の場合: `specs/<機能>/` と関連コード
-- tune の場合: `harness/tune/log.md`（これまでの仮説と結果）と関連コード
+- `specs/<機能>/` と関連コード
 
 ## 考えること
 
 - 同じ FAIL や不採用が繰り返される共通の原因は何か
-- 置いている前提（設計・ボトルネックの見立て・計測方法）のどれが怪しいか
+- 置いている前提（設計・仕様の解釈・テストの前提）のどれが怪しいか
 - 今の方針を続けるべきか、別の方針に切り替えるべきか
 
 ## 出力（この YAML だけを返す）
 
 ```yaml
 questioned_assumptions:
-  - 前提: 遅いのは DB クエリだ
-    疑う理由: 3 回のインデックス追加でスコアが変わっていない
+  - 前提: 税額は明細ごとに丸める
+    疑う理由: 3 回の修正で A-2 の期待値と 1 円ずれ続けている
 alternatives:
   - 方針と、それを確かめる最小の実験
 recommendation: continue | replan | blocked

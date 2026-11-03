@@ -1,0 +1,15 @@
+# ハーネス自体の動作確認用の偽の課題。speed.txt の値（±5% のばらつき付き）がスコアになり、
+# broken.txt があると正常性検証に落ちる。Claude を動かさずに evaluator / hooks を試すのにも使う。
+[task]
+name = "fake"
+setup = "bash harness/tune/experiments/tasks/fake/setup.sh .workspace/fake-app"
+
+[app]
+workdir = ".workspace/fake-app"
+
+[commands]
+benchmark = "bash harness/tune/experiments/tasks/fake/bench.sh .workspace/fake-app"
+deploy = "true"
+
+[evaluation]
+noise_pct = 6.0   # 偽ベンチのばらつき（±5%）より大きく

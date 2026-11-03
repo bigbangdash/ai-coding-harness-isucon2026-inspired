@@ -1,4 +1,6 @@
-# 評価ルール
+# 評価ルール（implement）
+
+tune（ISUCON 型の性能改善）の評価は `harness/tune/EVALUATION.md`。
 
 評価は「誰が評価するか」ではなく「何を基準に、どの仕組みで判定するか」で決める。
 プログラムで判定できるものはプログラムに任せ、LLM と人間はそれ以外を見る。
@@ -11,7 +13,6 @@
 | 実装 | `harness/implement/evals/implementation.md` | `evaluate.sh` | — | — |
 | 業務受入 | `harness/implement/evals/acceptance.md` | `evaluate.sh` | evaluator | 運用可否を確認 |
 | AI 行動 | `harness/implement/evals/behavior.md` | `evaluate.sh` | evaluator | 完了報告を照合 |
-| 性能（tune） | スコアの中央値が最良より改善 | `bench.sh` | critic（停滞時） | — |
 
 Level 1 が PASS でないとき、Level 2 の判定で PASS に上書きしない。
 
@@ -36,7 +37,6 @@ Level 1 が PASS でないとき、Level 2 の判定で PASS に上書きしな�
 |---|---|
 | FAIL が `MAX_FAILS_CRITIC` 回連続 | critic で前提を見直してから修正 |
 | FAIL が `MAX_FAILS_BLOCK` 回連続 | BLOCKED。人間に返す |
-| tune の不採用が `TUNE_STALL_CRITIC` 回連続 | critic で仮説を見直す |
 
 しきい値は `harness/shared/commands.sh` にある。
 

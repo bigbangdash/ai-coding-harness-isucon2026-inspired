@@ -1,0 +1,3 @@
+# D: 判断履歴の記録・復元なし
+[features]
+decision_log = false

@@ -1,9 +1,9 @@
 # 開発ルール
 
-このリポジトリには 2 つのハーネスがある。どちらも評価は `EVALUATION.md` に従う。
+このリポジトリには 2 つのハーネスがある。このファイルは implement 用のルール。
 
-- **implement**（`impl/*` ブランチ）: 承認済みの要件を満たす機能を作る
-- **tune**（`tune/*` ブランチ）: 正しさを保ったままベンチマークスコアを上げる
+- **implement**（`impl/*` ブランチ）: 承認済みの要件を満たす機能を作る。評価は `EVALUATION.md`
+- **tune**: ISUCON 型の自律性能改善。`harness/tune/runner/main.py` が起動したセッションは `harness/tune/CLAUDE.md` に従う
 
 ## 作業原則
 
@@ -20,10 +20,6 @@
 4. `risk: high` なら evaluator で設計評価（scope: design）を受ける
 5. PASS したら evaluator で最終確認（scope: final）を受け、結果をそのまま人間に報告する
 
-## tune の流れ
-
-`harness/tune/README.md` に従う。スコアの採否は `bench.sh` が決める。
-
 ## evaluator / critic の呼び方
 
 依頼文には評価対象（機能名と scope）だけを書く。自分の説明や「問題ない」といった結論は書かない。
@@ -31,7 +27,7 @@ evaluator は `.harness/logs/` と `specs/` を自分で読む。
 
 ## 制約
 
-- 評価の仕組み（`EVALUATION.md`、`harness/shared/`、`harness/implement/evals/`、`harness/tune/bench.sh`、`.claude/`）を変更しない
+- 評価の仕組み（`EVALUATION.md`、`harness/shared/`、`harness/implement/evals/`、`harness/tune/`、`.claude/`）を変更しない
 - テストを削除・スキップ・弱体化しない
 - `harness/shared/approve.sh` は人間が実行する。自分から実行を提案しない
 - `.harness/` の中身を変更・削除しない

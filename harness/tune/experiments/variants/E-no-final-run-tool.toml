@@ -1,0 +1,3 @@
+# E: 最終走行の停止判断ツールなし（エージェントが自分で判断）
+[features]
+final_run_tool = false

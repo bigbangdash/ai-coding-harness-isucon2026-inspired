@@ -6,6 +6,5 @@ EVALUATION.md
 .claude/agents
 harness/shared
 harness/implement/evals
-harness/tune/bench.sh
 specs
 tests/acceptance

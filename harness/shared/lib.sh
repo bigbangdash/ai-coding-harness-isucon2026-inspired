@@ -1,4 +1,4 @@
-# evaluate.sh / approve.sh / bench.sh で共有する関数。
+# evaluate.sh / approve.sh で共有する関数。
 
 H=harness/shared
 

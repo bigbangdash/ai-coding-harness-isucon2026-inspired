@@ -1,0 +1,3 @@
+# F: Compaction / 再開時の外部状態注入なし（標準 Compaction のみ）
+[features]
+state_restore = false

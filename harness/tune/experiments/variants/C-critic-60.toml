@@ -1,0 +1,3 @@
+# C: Critic を促すまでの停滞時間を 60 分に
+[stagnation]
+threshold_minutes = 60
