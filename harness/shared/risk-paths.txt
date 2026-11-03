@@ -1,0 +1,7 @@
+# 変更されたら高リスク扱いにするパス（拡張正規表現）。
+# 高リスクなら evaluator による設計評価と人間の承認が必要になる。
+(^|/)auth/
+(^|/)(billing|invoice|payment)s?/
+(^|/)migrations?/
+(^|/)schema\.
+(^|/)permissions?/

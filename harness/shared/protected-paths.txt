@@ -1,0 +1,11 @@
+# 評価基準・評価の仕組み・人間が合意する仕様。
+# ここに挙げたファイルが approved.sha256 と食い違うと evaluate.sh は BLOCKED を返す。
+CLAUDE.md
+EVALUATION.md
+.claude/settings.json
+.claude/agents
+harness/shared
+harness/implement/evals
+harness/tune/bench.sh
+specs
+tests/acceptance

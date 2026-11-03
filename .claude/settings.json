@@ -2,7 +2,31 @@
   "permissions": {
     "deny": [
       "Read(./.env)",
-      "Read(./.env.*)"
+      "Read(./.env.*)",
+      "Edit(/CLAUDE.md)",
+      "Write(/CLAUDE.md)",
+      "Edit(/EVALUATION.md)",
+      "Write(/EVALUATION.md)",
+      "Edit(/.claude/**)",
+      "Write(/.claude/**)",
+      "Edit(/harness/shared/**)",
+      "Write(/harness/shared/**)",
+      "Edit(/harness/implement/evals/**)",
+      "Write(/harness/implement/evals/**)",
+      "Edit(/harness/tune/bench.sh)",
+      "Write(/harness/tune/bench.sh)",
+      "Edit(/harness/tune/log.md)",
+      "Write(/harness/tune/log.md)",
+      "Edit(/harness/tune/best.txt)",
+      "Write(/harness/tune/best.txt)",
+      "Edit(/.harness/**)",
+      "Write(/.harness/**)"
+    ],
+    "ask": [
+      "Bash(harness/shared/approve.sh:*)",
+      "Bash(./harness/shared/approve.sh:*)",
+      "Bash(bash harness/shared/approve.sh:*)",
+      "Bash(git push:*)"
     ]
   }
 }
