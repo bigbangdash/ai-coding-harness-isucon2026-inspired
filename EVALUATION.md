@@ -28,7 +28,7 @@ Level 1 が PASS でないとき、Level 2 の判定で PASS に上書きしな�
 
 ## リスクによる切り替え
 
-`harness/shared/risk-paths.txt` に一致するファイルを変更したら `risk: high`。
+`harness/implement/risk-paths.txt` に一致するファイルを変更したら `risk: high`。
 高リスクでは evaluator の設計評価と人間の承認が必要。判定は AI の自己申告ではなくパスで決める。
 
 ## 止まる条件
@@ -38,11 +38,11 @@ Level 1 が PASS でないとき、Level 2 の判定で PASS に上書きしな�
 | FAIL が `MAX_FAILS_CRITIC` 回連続 | critic で前提を見直してから修正 |
 | FAIL が `MAX_FAILS_BLOCK` 回連続 | BLOCKED。人間に返す |
 
-しきい値は `harness/shared/commands.sh` にある。
+しきい値は `harness/implement/commands.sh` にある。
 
 ## 評価基準の保護
 
-`harness/shared/protected-paths.txt` のファイル（評価基準・評価スクリプト・仕様・受け入れテスト）は、
+`harness/implement/protected-paths.txt` のファイル（評価基準・評価スクリプト・仕様・受け入れテスト）は、
 人間が `approve.sh` で承認した内容（`approved.sha256`）と食い違うと BLOCKED になる。
 
 - 予防: `.claude/settings.json` の deny で評価の仕組みの編集を禁止し、`approve.sh` は ask で人間の確認を必須にする
@@ -53,3 +53,5 @@ Level 1 が PASS でないとき、Level 2 の判定で PASS に上書きしな�
 - AI がシェル経由でハッシュを再計算して `approved.sha256` を書き換えることは、ローカルでは完全には防げない。最終的には CI とブランチ保護（承認ファイルの変更に人間のレビューを必須にする）で担保する
 - B-2 / B-4 は正規表現による検出なので、見逃しや誤検出がある
 - evaluator に渡す依頼文から推論を除くのは運用ルールで、仕組みでは強制していない
+- Stop Hook は同じブランチで 3 回続けて止めたら、無限ループを避けるため終了を許す（警告は出る）
+- `.harness/`（評価結果・evaluator の記録）は Edit を禁止しているが、シェルからは書き換えられる。CI で evaluate.sh を再実行して担保する

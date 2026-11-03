@@ -3,7 +3,7 @@
 # 人間だけが実行する。Claude Code からの実行は .claude/settings.json の ask で確認ダイアログになる。
 set -eu
 cd "$(git rev-parse --show-toplevel)"
-. harness/shared/lib.sh
+. harness/implement/lib.sh
 
 changes=$(unapproved_changes)
 if [ -z "$changes" ]; then echo "承認待ちの変更はありません。"; exit 0; fi

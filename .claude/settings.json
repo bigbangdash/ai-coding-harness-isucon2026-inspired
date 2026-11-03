@@ -6,15 +6,37 @@
       "Edit(/CLAUDE.md)",
       "Edit(/EVALUATION.md)",
       "Edit(/.claude/**)",
-      "Edit(/harness/shared/**)",
-      "Edit(/harness/implement/evals/**)",
+      "Edit(/harness/implement/**)",
       "Edit(/.harness/**)"
     ],
     "ask": [
-      "Bash(harness/shared/approve.sh:*)",
-      "Bash(./harness/shared/approve.sh:*)",
-      "Bash(bash harness/shared/approve.sh:*)",
+      "Bash(harness/implement/approve.sh:*)",
+      "Bash(./harness/implement/approve.sh:*)",
+      "Bash(bash harness/implement/approve.sh:*)",
       "Bash(git push:*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/harness/implement/hooks/stop.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/harness/implement/hooks/record_review.py"
+          }
+        ]
+      }
     ]
   }
 }

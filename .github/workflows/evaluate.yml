@@ -1,0 +1,30 @@
+# implement の Level 1 評価を CI で再実行する。ローカルの .harness/ の記録は信用しない。
+# BLOCKED（未承認の保護対象の変更など）も失敗扱い。
+name: evaluate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: main ブランチを用意（merge-base の計算用）
+        run: git rev-parse -q --verify main || git branch main origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: evaluate.sh
+        run: harness/implement/evaluate.sh
+      - name: 評価ログを保存
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harness-logs
+          path: .harness/logs/
+          include-hidden-files: true

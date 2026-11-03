@@ -4,7 +4,7 @@ CLAUDE.md
 EVALUATION.md
 .claude/settings.json
 .claude/agents
-harness/shared
-harness/implement/evals
+harness/implement
 specs
 tests/acceptance
+.github

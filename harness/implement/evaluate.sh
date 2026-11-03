@@ -4,7 +4,7 @@
 # 結果は .harness/logs/last-eval.yaml、差分は .harness/logs/diff.patch にも保存する（evaluator が読む）。
 set -u
 cd "$(git rev-parse --show-toplevel)" || exit 2
-. harness/shared/lib.sh
+. harness/implement/lib.sh
 . "$H/commands.sh"
 
 LOGS=.harness/logs; STATE=.harness/state
@@ -25,11 +25,8 @@ add() { # id check verdict issue evidence
 
 # ---- 比較の基準（main との分岐点。main 上なら HEAD） ----
 branch=$(git rev-parse --abbrev-ref HEAD)
-if [ "$branch" != main ] && git rev-parse -q --verify main >/dev/null; then
-  base=$(git merge-base HEAD main)
-else
-  base=HEAD
-fi
+base=$(eval_base)
+fingerprint=$(worktree_fingerprint "$base")
 untracked=$(git ls-files --others --exclude-standard)
 changed=$( { git diff --name-only "$base"; printf '%s\n' "$untracked"; } | grep -v '^$' | sort -u)
 git diff "$base" >"$LOGS/diff.patch"
@@ -107,6 +104,7 @@ esac
   echo "status: $status"
   echo "branch: $branch"
   echo "base: $(git rev-parse --short "$base")"
+  echo "fingerprint: $fingerprint"
   echo "consecutive_fails: $fails"
   echo "risk: $risk"
   if [ -n "$risky" ]; then echo "risky_paths:"; printf '  - %s\n' $risky; fi

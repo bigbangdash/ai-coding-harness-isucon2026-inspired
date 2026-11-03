@@ -12,8 +12,8 @@
 | パス | 役割 |
 |---|---|
 | `CLAUDE.md` / `EVALUATION.md` | implement のルールと評価 |
-| `harness/shared/` | implement の評価実行（`evaluate.sh`）と保護・承認（`approve.sh`） |
-| `harness/implement/evals/` | implement の評価基準（設計・実装・業務受入・AI 行動） |
+| `harness/implement/` | implement 一式（`evaluate.sh`、保護と承認、評価基準 `evals/`、テンプレート、Hook） |
+| `.github/workflows/` | CI で `evaluate.sh` を再実行 |
 | `.claude/agents/` | implement の evaluator / critic |
 | `harness/tune/` | tune 一式（Runner・Evaluator・Hooks・Critic・ハーネス評価）。詳しくは `harness/tune/README.md` |
 | `app/` | implement の対象アプリ |
@@ -31,9 +31,11 @@
 | 項目 | 状態 |
 |---|---|
 | implement: 評価ルール・`evaluate.sh`・保護と承認 | ✅（作業用コピーで動作確認済み） |
-| implement: evaluator / critic | 定義のみ（実運用は未検証） |
+| implement: Stop Hook / evaluator 記録 Hook | ✅（Hook 単体で確認） |
+| implement: evaluator / critic | 定義のみ（実際の起動は未検証） |
 | implement: `commands.sh` の設定・対象アプリ | 未定（今は evaluate が BLOCKED） |
 | tune: Runner・Evaluator・Hooks・final_run・experiments | ✅（偽の課題で Claude なしの動作確認） |
 | tune: Claude Code を起動した通し実行 | 未検証 |
 | tune: 実際の過去問の課題 | 未着手 |
-| CI・ブランチ保護 | 未着手 |
+| CI（evaluate.sh の再実行） | ✅（未 push のため未実行） |
+| ブランチ保護 | 未設定（public リポジトリなので設定可能） |

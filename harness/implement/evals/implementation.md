@@ -1,6 +1,6 @@
 # 実装評価（Implementation Evaluation）
 
-評価者: `harness/shared/evaluate.sh`（Level 1）。LLM の判断で上書きしない。
+評価者: `harness/implement/evaluate.sh`（Level 1）。LLM の判断で上書きしない。
 
 | ID | 基準 | コマンド（`commands.sh`） | 必須 |
 |---|---|---|---|
