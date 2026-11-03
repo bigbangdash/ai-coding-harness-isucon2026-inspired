@@ -1,13 +1,12 @@
 # approved-by: miyamoto
-# approved-at: 2026-11-03 16:22:47
-# approved-only: harness
+# approved-at: 2026-11-03 16:26:54
 aff69eeabe6d8d36c170485f2b1ce8b63aec65d0bd32ffe2a183ccefdede4f37  .claude/agents/critic.md
 1e7c322eb4e4b359f902478f52f83c9af54c1234eb3b22ac2efc82909667c248  .claude/agents/evaluator.md
 d8e168cfe8a7afbfb0b50d279977263a95456c44bfaaffc7e02c979a56077206  .claude/settings.json
 1ec397b9e11b3bf2260156b840e8b4fd4fb008edf8eddb2e48c46d52a5b8dd9e  .github/workflows/evaluate.yml
 01cda35f29805d155faf10b6f2dc2013da1c3021fbae9dcb789f24c1c139da7f  CLAUDE.md
 e6ea48d330b2ad1a38f524b22e8ad8dda5dcf45f3f93be2a99e96c4b458f1815  EVALUATION.md
-a84759948e5deda450192be2bd47d42a34a8d03c1da35e7e10df2f7879cec339  harness/implement/approve.sh
+ea4bc7c681c42e1980d9a6329041d2c6b1f6397eeb1ea777f5cf6ca9534d6a5e  harness/implement/approve.sh
 a369446a1ea74008f86691abd6be86be40d5540e0064a437aef4734ea6d966eb  harness/implement/commands.sh
 94196e044b1261448d7a87fca52824994d157cb78f374d13e70319b3bea3e3d8  harness/implement/evals/acceptance.md
 d041f88411abd5f842b7c7e544a919f69ae56c6fd5467029f56d93cacdef5a42  harness/implement/evals/behavior.md
@@ -23,3 +22,5 @@ d1b246104a611bc44f8fbc0c26d1fec18e4554577d4948d1e77d0c3df16539d6  harness/implem
 340691a428eada4ae1221dd8628b8dd84c97bb32d775a5d03c83fcb14558c485  harness/implement/risk-paths.txt
 855061f6ff7e4f4949708ecafb0d95e3b9885889c2328917b9b14959b81976be  harness/implement/templates/acceptance.md
 06299cc24009f77d4d0065cab52bd5c9c2abdcb0100d82a6e107ae1be3d8fb4b  harness/implement/templates/requirements.md
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  specs/.gitkeep
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  tests/acceptance/.gitkeep
